@@ -1,4 +1,3 @@
-using Dispatcher.Application.Abstractions.Services;
 using Dispatcher.Domain.Entities;
 using Dispatcher.Domain.Enums;
 using Dispatcher.Domain.Options;
@@ -67,9 +66,11 @@ public class Worker : BackgroundService
                 {
                     try
                     {
+                        _logger.LogInformation("Processing sub task {SubTaskId}", subTask.Id);
                         await _dispatcherWorkerService.ProcessSubTask(subTask, cancellationToken);
                         subTask.Status = SubTaskStatusEnum.Completed;
                         await _dispatcherWorkerService.UpdateSubTask(subTask);
+                        _logger.LogInformation("End processing sub task {SubTaskId}", subTask.Id);
                     }
                     catch (Exception e)
                     {

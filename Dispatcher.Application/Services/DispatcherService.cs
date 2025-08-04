@@ -6,7 +6,6 @@ using Dispatcher.Domain.Enums;
 using Dispatcher.Domain.Exceptions;
 using Dispatcher.SharedApplication.Abstractions.Queue;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Dispatcher.Application.Services;
 
@@ -14,18 +13,15 @@ public class DispatcherService: IDispatcherService
 {
     private readonly IApplicationDbContext _context;
     private readonly IQueueService _queueService;
-    private readonly ILogger<DispatcherService> _logger;
     private readonly HttpClient _httpClient;
 
     public DispatcherService(
         IApplicationDbContext context, 
         IHttpClientFactory httpClientFactory,
-        IQueueService queueService,
-        ILogger<DispatcherService>  logger)
+        IQueueService queueService)
     {
         _context = context;
         _queueService = queueService;
-        _logger = logger;
         _httpClient = httpClientFactory.CreateClient();
     }
 
@@ -41,7 +37,7 @@ public class DispatcherService: IDispatcherService
         
         if (!httpResponse.IsSuccessStatusCode)
         {
-            throw new BadRequestHttpException($"Can't get list of urls. Url: {createTask.ListUrl}");
+            throw new BadRequestHttpException($"Can not get list of urls. Url: {createTask.ListUrl}");
         }
         
         using var reader = new StreamReader(await httpResponse.Content.ReadAsStreamAsync(cancellationToken));
@@ -74,7 +70,7 @@ public class DispatcherService: IDispatcherService
 
         if (task == null)
         {
-            throw new NotFoundHttpException($"Can't find task with id: {taskId}");
+            throw new NotFoundHttpException($"Can not find task with id: {taskId}");
         }
         
         return new TaskDto(task);
@@ -87,7 +83,7 @@ public class DispatcherService: IDispatcherService
 
         if (subTask == null)
         {
-            throw new NotFoundHttpException($"Can't find subtask with id: {subTaskId}");
+            throw new NotFoundHttpException($"Can not find subtask with id: {subTaskId}");
         }
         
         return new SubTaskDto(subTask);
@@ -100,7 +96,7 @@ public class DispatcherService: IDispatcherService
 
         if (subTask == null)
         {
-            throw new NotFoundHttpException($"Can't find subtask with id: {subTaskDto.Id}");
+            throw new NotFoundHttpException($"Can not find subtask with id: {subTaskDto.Id}");
         }
         
         await _queueService.AddSubTaskToQueue(subTaskDto.Id);
@@ -112,7 +108,7 @@ public class DispatcherService: IDispatcherService
         
         if (!taskExist)
         {
-            throw new NotFoundHttpException($"Can't find task with id: {taskId}");
+            throw new NotFoundHttpException($"Can not find task with id: {taskId}");
         }
         
         var statuses = await _context.SubTasks
@@ -130,7 +126,7 @@ public class DispatcherService: IDispatcherService
 
         if (subTask == null)
         {
-            throw new NotFoundHttpException($"Can't find subtask with id: {subTaskId}");
+            throw new NotFoundHttpException($"Can not find subtask with id: {subTaskId}");
         }
 
         return new SubTaskStatusDto(subTask.Status);
@@ -142,7 +138,7 @@ public class DispatcherService: IDispatcherService
         
         if (!taskExist)
         {
-            throw new NotFoundHttpException($"Can't find task with id: {taskId}");
+            throw new NotFoundHttpException($"Can not find task with id: {taskId}");
         }
 
         var stat = await _context.SubTasks
