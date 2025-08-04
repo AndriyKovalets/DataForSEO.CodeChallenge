@@ -14,13 +14,12 @@ public class ParserFactory: IParserFactory
         };
     }
     
-    public ParserTypeEnum GetTypeOfParser(string url)
+    public ParserTypeEnum GetTypeOfParser(string contendType)
     {
-        if (url.EndsWith(".data.json.gz"))
+        return contendType switch
         {
-            return ParserTypeEnum.Gzip;
-        }
-
-        return ParserTypeEnum.Default;
+            "application/octet-stream" => ParserTypeEnum.Gzip,
+            _ => ParserTypeEnum.Default
+        };
     }
 }

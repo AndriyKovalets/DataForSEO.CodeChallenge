@@ -87,7 +87,7 @@ public class DispatcherWorkerService: IDispatcherWorkerService
             return;
         }
         
-        var parserType = _parserFactory.GetTypeOfParser(subTask.Url);
+        var parserType = _parserFactory.GetTypeOfParser(httpResponse.Content.Headers.ContentType?.MediaType ?? "");
         var parser = _parserFactory.CreateParser<KeywordModel>(parserType);
 
         var stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken);

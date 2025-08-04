@@ -5,5 +5,5 @@ namespace Dispatcher.WorkerApplication.Abstractions.Services.Parsers;
 public interface IParserFactory
 {
     IParser<TEntity> CreateParser<TEntity>(ParserTypeEnum type);
-    ParserTypeEnum GetTypeOfParser(string url);
+    ParserTypeEnum GetTypeOfParser(string contentType);
 }
