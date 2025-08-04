@@ -5,6 +5,7 @@ using Dispatcher.Domain.Models;
 using Dispatcher.SharedApplication.Abstractions.Queue;
 using Dispatcher.SharedApplication.Extensions;
 using Dispatcher.WorkerApplication.Abstractions.Services;
+using Dispatcher.WorkerApplication.Abstractions.Services.Parsers;
 using Dispatcher.WorkerApplication.Abstractions.Services.Processors;
 using Dispatcher.WorkerApplication.Parsers;
 using Microsoft.EntityFrameworkCore;
@@ -16,17 +17,20 @@ public class DispatcherWorkerService: IDispatcherWorkerService
     private readonly IApplicationDbContext _context;
     private readonly IMetricProcessorsModule _metricProcessorsModule;
     private readonly IQueueService _queueService;
+    private readonly IParserFactory _parserFactory;
     private readonly HttpClient _httpClient;
 
     public DispatcherWorkerService(
         IApplicationDbContext  context,
         IHttpClientFactory clientFactory,
         IMetricProcessorsModule metricProcessorsModule,
-        IQueueService  queueService)
+        IQueueService  queueService,
+        IParserFactory parserFactory)
     {
         _context = context;
         _metricProcessorsModule = metricProcessorsModule;
         _queueService = queueService;
+        _parserFactory = parserFactory;
         _httpClient = clientFactory.CreateClient();
         _httpClient.Timeout = TimeSpan.FromHours(1);
     }
@@ -83,8 +87,8 @@ public class DispatcherWorkerService: IDispatcherWorkerService
             return;
         }
         
-        var parserType = ParserFactory.GetTypeOfParser(subTask.Url);
-        var parser = ParserFactory.CreateParser<KeywordModel>(parserType);
+        var parserType = _parserFactory.GetTypeOfParser(subTask.Url);
+        var parser = _parserFactory.CreateParser<KeywordModel>(parserType);
 
         var stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken);
         var data = parser.Parse(stream);

@@ -3,9 +3,9 @@ using Dispatcher.WorkerApplication.Abstractions.Services.Parsers;
 
 namespace Dispatcher.WorkerApplication.Parsers;
 
-public static class ParserFactory
+public class ParserFactory: IParserFactory
 {
-    public static IParser<TEntity> CreateParser<TEntity>(ParserTypeEnum type)
+    public IParser<TEntity> CreateParser<TEntity>(ParserTypeEnum type)
     {
         return type switch
         {
@@ -14,7 +14,7 @@ public static class ParserFactory
         };
     }
     
-    public static ParserTypeEnum GetTypeOfParser(string url)
+    public ParserTypeEnum GetTypeOfParser(string url)
     {
         if (url.EndsWith(".data.json.gz"))
         {
