@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Dispatcher.Application.Abstractions.Persistence;
 using Dispatcher.Application.Abstractions.QueueService;
 using Dispatcher.Application.Abstractions.Services;
@@ -134,5 +135,29 @@ public class DispatcherService: IDispatcherService
         }
 
         return new SubTaskStatusDto(subTask.Status);
+    }
+    
+    public async Task<TaskStatDto> GetTaskStat(int taskId, CancellationToken cancellationToken = default)
+    {
+        var taskExist =  await _context.Tasks.AnyAsync(x => x.Id == taskId, cancellationToken);
+        
+        if (!taskExist)
+        {
+            throw new NotFoundHttpException($"Can't find task with id: {taskId}");
+        }
+
+        var stat = await _context.SubTasks
+            .Where(x => x.TaskId == taskId)
+            .GroupBy(_ => 1)
+            .Select(x => new TaskStatDto
+            {
+                CountOfFailRows = x.Sum(y => y.CountOfFailRows),
+                CountOfRows = x.Sum(y => y.CountOfRows),
+                HighVolumeKeywords = x.Sum(y => y.HighVolumeKeywords),
+                MisspelledKeywords = x.Sum(y => y.MisspelledKeywords),
+                CountOfFailFiles = x.Count(y => y.Status == SubTaskStatusEnum.FailFile)
+            }).FirstOrDefaultAsync(cancellationToken);
+        
+        return stat ?? new TaskStatDto();
     }
 }

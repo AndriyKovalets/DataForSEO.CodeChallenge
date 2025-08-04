@@ -67,4 +67,13 @@ public class Dispatcher: ControllerBase
         
         return Ok(result);
     }
+    
+    [HttpGet]
+    [Route("task/{id}/statistics")]
+    public async Task<IActionResult> GetTaskStat([FromRoute] int id)
+    {
+        var result = await _dispatcherService.GetTaskStat(id);
+        
+        return Ok(result);
+    }
 }

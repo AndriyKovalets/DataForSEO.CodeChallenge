@@ -10,4 +10,5 @@ public interface IDispatcherService
     Task<SubTaskDto> GetSubTask(int subTaskId, CancellationToken cancellationToken = default);
     Task<SubTaskStatusDto> GetSubTaskStatus(int subTaskId, CancellationToken cancellationToken = default);
     Task RestartSubTask(RestartSubTaskDto subTaskDto, CancellationToken cancellationToken = default);
+    Task<TaskStatDto> GetTaskStat(int taskId, CancellationToken cancellationToken = default);
 }
