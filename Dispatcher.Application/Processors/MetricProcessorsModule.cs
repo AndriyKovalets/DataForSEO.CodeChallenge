@@ -17,30 +17,4 @@ public class MetricProcessorsModule: IMetricProcessorsModule
         ];
     }
     
-    public void SetMetrics(IEnumerable<IMetricProcessor> metricProcessors, IMetrics entity)
-    {
-        foreach (var metricProcessor in metricProcessors)
-        {
-            SetMetrics(metricProcessor, entity);
-        }
-    }
-    
-    private void SetMetrics(IMetricProcessor metricProcessors, IMetrics entity)
-    {
-        switch (metricProcessors)
-        {
-            case TotalRowMetricProcessor:
-                entity.CountOfRows = metricProcessors.MetricCount;
-                break;
-            case HighVolumeKeywordsMetricProcessor:
-                entity.HighVolumeKeywords = metricProcessors.MetricCount;
-                break;
-            case MisspelledKeywordsMetricProcessor:
-                entity.MisspelledKeywords = metricProcessors.MetricCount;
-                break;
-            case FailRowMetricProcessor:
-                entity.CountOfFailRows = metricProcessors.MetricCount;
-                break;
-        }
-    }
 }

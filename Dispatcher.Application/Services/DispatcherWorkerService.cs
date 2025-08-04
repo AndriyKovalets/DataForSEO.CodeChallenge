@@ -65,7 +65,7 @@ public class DispatcherWorkerService: IDispatcherWorkerService
     {
         if (string.IsNullOrEmpty(subTask.Url) || !subTask.Url.IsValidUrl())
         {
-            subTask.Status = SubTaskStatusEnum.Error;
+            subTask.Status = SubTaskStatusEnum.FailFile;
             return;
         }
         
@@ -73,7 +73,7 @@ public class DispatcherWorkerService: IDispatcherWorkerService
         
         if (!httpResponse.IsSuccessStatusCode)
         {
-            subTask.Status = SubTaskStatusEnum.Error;
+            subTask.Status = SubTaskStatusEnum.FailFile;
             
             return;
         }
@@ -93,8 +93,12 @@ public class DispatcherWorkerService: IDispatcherWorkerService
                 metricProcessor.Process(item);
             }
         }
-        
-        _metricProcessorsModule.SetMetrics(metricProcessorList, subTask);
+
+        foreach (var metricProcessor in metricProcessorList)
+        {
+            metricProcessor.SetMetric(subTask);
+        }
+
         subTask.Status = SubTaskStatusEnum.Completed;
     }
 }

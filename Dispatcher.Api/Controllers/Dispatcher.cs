@@ -22,4 +22,49 @@ public class Dispatcher: ControllerBase
         
         return Created($"/{createdTask.Id}", createdTask);
     }
+    
+    [HttpGet]
+    [Route("task/{id}")]
+    public async Task<IActionResult> GetTask([FromRoute] int id)
+    {
+        var result = await _dispatcherService.GetTask(id);
+        
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("sub-task/{id}")]
+    public async Task<IActionResult> GetSubTask([FromRoute] int id)
+    {
+        var result = await _dispatcherService.GetSubTask(id);
+        
+        return Ok(result);
+    }
+    
+    [HttpPost]
+    [Route("sub-task/restart")]
+    public async Task<IActionResult> RestartSubTaskStatus([FromBody] RestartSubTaskDto subTaskDto)
+    {
+        await _dispatcherService.RestartSubTask(subTaskDto);
+        
+        return Ok();
+    }
+    
+    [HttpGet]
+    [Route("task/{id}/status")]
+    public async Task<IActionResult> GetTaskStatus([FromRoute] int id)
+    {
+        var result = await _dispatcherService.GetTaskStatus(id);
+        
+        return Ok(result);
+    }
+    
+    [HttpGet]
+    [Route("sub-task/{id}/status")]
+    public async Task<IActionResult> GetSubTaskStatus([FromRoute] int id)
+    {
+        var result = await _dispatcherService.GetSubTaskStatus(id);
+        
+        return Ok(result);
+    }
 }

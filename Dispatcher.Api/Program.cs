@@ -1,3 +1,4 @@
+using Dispatcher.Api.Middlewares;
 using Dispatcher.Application.Extensions;
 using Dispatcher.Domain;
 using Dispatcher.Infrastructure;
@@ -18,7 +19,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

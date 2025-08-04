@@ -1,10 +1,10 @@
 using Dispatcher.Application.Abstractions.Persistence;
 using Dispatcher.Application.Abstractions.QueueService;
 using Dispatcher.Application.Abstractions.Services;
-using Dispatcher.Application.Extensions;
 using Dispatcher.Domain.Dtos;
 using Dispatcher.Domain.Entities;
 using Dispatcher.Domain.Enums;
+using Dispatcher.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -41,7 +41,7 @@ public class DispatcherService: IDispatcherService
         
         if (!httpResponse.IsSuccessStatusCode)
         {
-            throw new ApplicationException($"Can't get list of urls. Url: {createTask.ListUrl}");
+            throw new BadRequestHttpException($"Can't get list of urls. Url: {createTask.ListUrl}");
         }
         
         using var reader = new StreamReader(await httpResponse.Content.ReadAsStreamAsync(cancellationToken));
@@ -66,7 +66,7 @@ public class DispatcherService: IDispatcherService
         return new TaskDto(taskToAdd);
     }
     
-    public async Task<TaskStatusDto> TaskStatus(int taskId, CancellationToken cancellationToken = default)
+    public async Task<TaskDto> GetTask(int taskId, CancellationToken cancellationToken = default)
     {
         var task = await _context.Tasks
             .Include(x => x.SubTasks)
@@ -74,17 +74,65 @@ public class DispatcherService: IDispatcherService
 
         if (task == null)
         {
-            
+            throw new NotFoundHttpException($"Can't find task with id: {taskId}");
+        }
+        
+        return new TaskDto(task);
+    }
+    
+    public async Task<SubTaskDto> GetSubTask(int subTaskId, CancellationToken cancellationToken = default)
+    {
+        var subTask = await _context.SubTasks
+            .FirstOrDefaultAsync(x => x.Id == subTaskId, cancellationToken);
+
+        if (subTask == null)
+        {
+            throw new NotFoundHttpException($"Can't find subtask with id: {subTaskId}");
+        }
+        
+        return new SubTaskDto(subTask);
+    }
+    
+    public async Task RestartSubTask(RestartSubTaskDto subTaskDto, CancellationToken cancellationToken = default)
+    {
+        var subTask = await _context.SubTasks
+            .FirstOrDefaultAsync(x => x.Id == subTaskDto.Id, cancellationToken);
+
+        if (subTask == null)
+        {
+            throw new NotFoundHttpException($"Can't find subtask with id: {subTaskDto.Id}");
+        }
+        
+        await _queueService.AddSubTaskToQueue(subTaskDto.Id);
+    }
+    
+    public async Task<Dictionary<string, int>> GetTaskStatus(int taskId, CancellationToken cancellationToken = default)
+    {
+        var taskExist =  await _context.Tasks.AnyAsync(x => x.Id == taskId, cancellationToken);
+        
+        if (!taskExist)
+        {
+            throw new NotFoundHttpException($"Can't find task with id: {taskId}");
+        }
+        
+        var statuses = await _context.SubTasks
+            .Where(x => x.TaskId == taskId)
+            .GroupBy(x => x.Status)
+            .ToDictionaryAsync(x =>x.Key.ToString(), y => y.Count(), cancellationToken);
+
+        return statuses;
+    }
+    
+    public async Task<SubTaskStatusDto> GetSubTaskStatus(int subTaskId, CancellationToken cancellationToken = default)
+    {
+        var subTask = await _context.SubTasks
+            .FirstOrDefaultAsync(x => x.Id == subTaskId, cancellationToken);
+
+        if (subTask == null)
+        {
+            throw new NotFoundHttpException($"Can't find subtask with id: {subTaskId}");
         }
 
-        var result = new TaskStatusDto()
-        {
-            NotStarted = task!.SubTasks.Count(x => x.Status == SubTaskStatusEnum.NotStarted),
-            InProgress = task.SubTasks.Count(x => x.Status == SubTaskStatusEnum.InProgress),
-            Completed = task.SubTasks.Count(x => x.Status == SubTaskStatusEnum.Completed),
-            Error = task.SubTasks.Count(x => x.Status == SubTaskStatusEnum.Error),
-        };
-
-        return result;
+        return new SubTaskStatusDto(subTask.Status);
     }
 }
