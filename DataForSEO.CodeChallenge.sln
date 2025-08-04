@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dispatcher.Domain", "Dispat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dispatcher.Worker", "Dispatcher.Worker\Dispatcher.Worker.csproj", "{5BBC76DF-2A00-4880-95C4-7DF72E9313EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dispatcher.WorkerApplication", "Dispatcher.WorkerApplication\Dispatcher.WorkerApplication.csproj", "{2B5DFE8C-9530-445C-8119-D518DC19486B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dispatcher.SharedApplication", "Dispatcher.SharedApplication\Dispatcher.SharedApplication.csproj", "{5084A4A3-1190-4EAE-8889-8B15AEC73135}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{5BBC76DF-2A00-4880-95C4-7DF72E9313EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BBC76DF-2A00-4880-95C4-7DF72E9313EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BBC76DF-2A00-4880-95C4-7DF72E9313EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B5DFE8C-9530-445C-8119-D518DC19486B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B5DFE8C-9530-445C-8119-D518DC19486B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B5DFE8C-9530-445C-8119-D518DC19486B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B5DFE8C-9530-445C-8119-D518DC19486B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5084A4A3-1190-4EAE-8889-8B15AEC73135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5084A4A3-1190-4EAE-8889-8B15AEC73135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5084A4A3-1190-4EAE-8889-8B15AEC73135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5084A4A3-1190-4EAE-8889-8B15AEC73135}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

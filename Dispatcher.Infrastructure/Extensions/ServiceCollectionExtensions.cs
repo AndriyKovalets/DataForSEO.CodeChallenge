@@ -1,13 +1,13 @@
 using Dispatcher.Application.Abstractions.Persistence;
-using Dispatcher.Application.Abstractions.QueueService;
 using Dispatcher.Infrastructure.Persistence;
 using Dispatcher.Infrastructure.Queue;
+using Dispatcher.SharedApplication.Abstractions.Queue;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
-namespace Dispatcher.Infrastructure;
+namespace Dispatcher.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {

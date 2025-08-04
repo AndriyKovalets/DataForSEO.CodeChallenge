@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Dispatcher.Domain\Dispatcher.Domain.csproj" />
+      <ProjectReference Include="..\Dispatcher.SharedApplication\Dispatcher.SharedApplication.csproj" />
     </ItemGroup>
 
     <ItemGroup>

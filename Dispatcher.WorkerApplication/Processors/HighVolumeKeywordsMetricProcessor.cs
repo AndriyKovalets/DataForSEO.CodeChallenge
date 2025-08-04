@@ -1,8 +1,8 @@
-using Dispatcher.Application.Abstractions.Processors;
 using Dispatcher.Domain.Abstractions;
 using Dispatcher.Domain.Models;
+using Dispatcher.WorkerApplication.Abstractions.Services.Processors;
 
-namespace Dispatcher.Application.Processors;
+namespace Dispatcher.WorkerApplication.Processors;
 
 public class HighVolumeKeywordsMetricProcessor: IMetricProcessor
 {

@@ -2,7 +2,7 @@ using Dispatcher.Domain.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dispatcher.Domain;
+namespace Dispatcher.Domain.Extensions;
 
 public static class ServiceCollectionExtensions
 {

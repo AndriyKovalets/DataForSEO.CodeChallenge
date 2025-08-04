@@ -1,7 +1,4 @@
-using Dispatcher.Application.Abstractions.Persistence;
-using Dispatcher.Application.Abstractions.Processors;
 using Dispatcher.Application.Abstractions.Services;
-using Dispatcher.Application.Processors;
 using Dispatcher.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,8 +15,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddHttpClient();
         services.AddScoped<IDispatcherService, DispatcherService>();
-        services.AddScoped<IDispatcherWorkerService, DispatcherWorkerService>();
-        services.AddScoped<IMetricProcessorsModule, MetricProcessorsModule>();
     }
     
 }

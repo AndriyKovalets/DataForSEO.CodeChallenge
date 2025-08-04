@@ -1,4 +1,4 @@
-namespace Dispatcher.Application.Abstractions.QueueService;
+namespace Dispatcher.SharedApplication.Abstractions.Queue;
 
 public interface IQueueService
 {

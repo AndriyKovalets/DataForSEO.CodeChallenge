@@ -1,15 +1,15 @@
 using Dispatcher.Application.Abstractions.Persistence;
-using Dispatcher.Application.Abstractions.Processors;
-using Dispatcher.Application.Abstractions.QueueService;
-using Dispatcher.Application.Abstractions.Services;
-using Dispatcher.Application.Extensions;
-using Dispatcher.Application.Parsers;
 using Dispatcher.Domain.Entities;
 using Dispatcher.Domain.Enums;
 using Dispatcher.Domain.Models;
+using Dispatcher.SharedApplication.Abstractions.Queue;
+using Dispatcher.SharedApplication.Extensions;
+using Dispatcher.WorkerApplication.Abstractions.Services;
+using Dispatcher.WorkerApplication.Abstractions.Services.Processors;
+using Dispatcher.WorkerApplication.Parsers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dispatcher.Application.Services;
+namespace Dispatcher.WorkerApplication.Services;
 
 public class DispatcherWorkerService: IDispatcherWorkerService
 {

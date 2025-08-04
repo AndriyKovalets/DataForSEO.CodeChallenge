@@ -1,7 +1,7 @@
-using Dispatcher.Application.Abstractions.Parsers;
 using Dispatcher.Domain.Enums;
+using Dispatcher.WorkerApplication.Abstractions.Services.Parsers;
 
-namespace Dispatcher.Application.Parsers;
+namespace Dispatcher.WorkerApplication.Parsers;
 
 public static class ParserFactory
 {

@@ -1,4 +1,4 @@
-namespace Dispatcher.Application.Extensions;
+namespace Dispatcher.SharedApplication.Extensions;
 
 public static class StringExtension
 {

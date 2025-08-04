@@ -1,4 +1,4 @@
-namespace Dispatcher.Application.Abstractions.Parsers;
+namespace Dispatcher.WorkerApplication.Abstractions.Services.Parsers;
 
 public interface IParser<out TModel>
 {

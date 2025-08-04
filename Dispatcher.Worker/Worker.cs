@@ -2,6 +2,7 @@ using Dispatcher.Application.Abstractions.Services;
 using Dispatcher.Domain.Entities;
 using Dispatcher.Domain.Enums;
 using Dispatcher.Domain.Options;
+using Dispatcher.WorkerApplication.Abstractions.Services;
 using Microsoft.Extensions.Options;
 
 namespace Dispatcher.Worker;

@@ -1,7 +1,6 @@
 using Dispatcher.Domain.Entities;
-using Dispatcher.Domain.Enums;
 
-namespace Dispatcher.Application.Abstractions.Services;
+namespace Dispatcher.WorkerApplication.Abstractions.Services;
 
 public interface IDispatcherWorkerService
 {

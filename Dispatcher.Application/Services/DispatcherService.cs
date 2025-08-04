@@ -1,11 +1,10 @@
-using System.Text.RegularExpressions;
 using Dispatcher.Application.Abstractions.Persistence;
-using Dispatcher.Application.Abstractions.QueueService;
 using Dispatcher.Application.Abstractions.Services;
 using Dispatcher.Domain.Dtos;
 using Dispatcher.Domain.Entities;
 using Dispatcher.Domain.Enums;
 using Dispatcher.Domain.Exceptions;
+using Dispatcher.SharedApplication.Abstractions.Queue;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

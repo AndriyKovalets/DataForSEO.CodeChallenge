@@ -1,5 +1,5 @@
-using Dispatcher.Application.Abstractions.QueueService;
 using Dispatcher.Domain.Options;
+using Dispatcher.SharedApplication.Abstractions.Queue;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 

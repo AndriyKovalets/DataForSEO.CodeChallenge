@@ -1,8 +1,6 @@
-using System.Reflection.Metadata;
-using Dispatcher.Application.Abstractions.Processors;
-using Dispatcher.Domain.Abstractions;
+using Dispatcher.WorkerApplication.Abstractions.Services.Processors;
 
-namespace Dispatcher.Application.Processors;
+namespace Dispatcher.WorkerApplication.Processors;
 
 public class MetricProcessorsModule: IMetricProcessorsModule
 {

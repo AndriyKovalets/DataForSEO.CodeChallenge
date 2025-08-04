@@ -1,8 +1,8 @@
 using System.IO.Compression;
 using System.Text.Json;
-using Dispatcher.Application.Abstractions.Parsers;
+using Dispatcher.WorkerApplication.Abstractions.Services.Parsers;
 
-namespace Dispatcher.Application.Parsers;
+namespace Dispatcher.WorkerApplication.Parsers;
 
 public class GzipParser<TModel>: IParser<TModel>
 {

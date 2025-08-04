@@ -1,7 +1,7 @@
 using Dispatcher.Domain.Abstractions;
 using Dispatcher.Domain.Models;
 
-namespace Dispatcher.Application.Abstractions.Processors;
+namespace Dispatcher.WorkerApplication.Abstractions.Services.Processors;
 
 public interface IMetricProcessor
 {

@@ -1,7 +1,9 @@
 using Dispatcher.Api.Middlewares;
 using Dispatcher.Application.Extensions;
 using Dispatcher.Domain;
+using Dispatcher.Domain.Extensions;
 using Dispatcher.Infrastructure;
+using Dispatcher.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
