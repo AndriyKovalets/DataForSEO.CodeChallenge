@@ -13,7 +13,6 @@ public class TaskDto
     {
         Id = task.Id;
         ListUrl = task.ListUrl;
-        CountOfFailSubTasks = task.CountOfFailSubTasks;
 
         foreach (var subTask in task.SubTasks)
         {
@@ -24,8 +23,6 @@ public class TaskDto
     public int Id { get; set; }
     
     public string ListUrl { get; set; } = null!;
-    
-    public int CountOfFailSubTasks { get; set; }
 
     public List<SubTaskDto> SubTasks { get; set; } = [];
 }

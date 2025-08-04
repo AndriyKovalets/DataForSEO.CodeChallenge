@@ -29,8 +29,7 @@ public class DispatcherService: IDispatcherService
     {
         var taskToAdd = new TaskEntity()
         {
-            ListUrl = createTask.ListUrl,
-            CountOfFailSubTasks = 0
+            ListUrl = createTask.ListUrl
         };
         
         var httpResponse = await _httpClient.GetAsync(createTask.ListUrl,  cancellationToken);

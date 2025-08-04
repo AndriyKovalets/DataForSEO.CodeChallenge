@@ -1,6 +1,7 @@
 using Dispatcher.WorkerApplication.Abstractions.Services;
 using Dispatcher.WorkerApplication.Abstractions.Services.Parsers;
 using Dispatcher.WorkerApplication.Abstractions.Services.Processors;
+using Dispatcher.WorkerApplication.Parsers;
 using Dispatcher.WorkerApplication.Processors;
 using Dispatcher.WorkerApplication.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,6 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient();
         services.AddScoped<IDispatcherWorkerService, DispatcherWorkerService>();
         services.AddScoped<IMetricProcessorsModule, MetricProcessorsModule>();
-        services.AddScoped<IParserFactory, IParserFactory>();
+        services.AddScoped<IParserFactory, ParserFactory>();
     }
 }
