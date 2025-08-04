@@ -36,6 +36,11 @@ public class DispatcherWorkerService: IDispatcherWorkerService
         return await _queueService.GetSubTaskFromQueue(count);
     }
     
+    public async Task RestartSubTask(int subTaskId)
+    {
+        await _queueService.AddSubTaskToQueue(subTaskId);
+    }
+    
     public async Task<List<SubTaskEntity>> GetSubTask(IEnumerable<int> subTaskIds, CancellationToken cancellationToken = default)
     {
         return await _context.SubTasks
@@ -54,11 +59,11 @@ public class DispatcherWorkerService: IDispatcherWorkerService
         await _context.Save(cancellationToken);
     }
     
-    public async Task UpdateSubTask(SubTaskEntity subTask, CancellationToken cancellationToken = default)
+    public async Task UpdateSubTask(SubTaskEntity subTask)
     {
         _context.Attach(subTask);
 
-        await _context.Save(cancellationToken);
+        await _context.Save();
     }
     
     public async Task ProcessSubTask(SubTaskEntity subTask, CancellationToken cancellationToken = default)

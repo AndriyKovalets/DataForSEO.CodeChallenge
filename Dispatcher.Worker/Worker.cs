@@ -1,4 +1,5 @@
 using Dispatcher.Application.Abstractions.Services;
+using Dispatcher.Domain.Entities;
 using Dispatcher.Domain.Enums;
 using Dispatcher.Domain.Options;
 using Microsoft.Extensions.Options;
@@ -10,7 +11,10 @@ public class Worker : BackgroundService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly WorkerOptions _options;
     private readonly ILogger<Worker> _logger;
-
+    private AsyncServiceScope _scope;
+    private IDispatcherWorkerService _dispatcherWorkerService;
+    
+    private List<SubTaskEntity> _subTasks;
     public Worker(
         IServiceScopeFactory scopeFactory,
         IOptions<WorkerOptions> options,
@@ -19,13 +23,20 @@ public class Worker : BackgroundService
         _scopeFactory = scopeFactory;
         _options = options.Value;
         _logger = logger;
+        _subTasks = [];
+    }
+
+    public override async Task StartAsync(CancellationToken cancellationToken)
+    {
+        _scope = _scopeFactory.CreateAsyncScope();
+        
+        _dispatcherWorkerService = _scope.ServiceProvider.GetRequiredService<IDispatcherWorkerService>();
+        
+        await base.StartAsync(cancellationToken);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await using var scope = _scopeFactory.CreateAsyncScope();
-        
-        var dispatcherWorkerService = scope.ServiceProvider.GetRequiredService<IDispatcherWorkerService>();
         
         var countOfMessages = _options.MaxDegreeOfParallelism > 0  ? _options.MaxDegreeOfParallelism : -1;
         var maxDegreeOfParallelism = _options.MaxDegreeOfParallelism > 0  ? _options.MaxDegreeOfParallelism : Environment.ProcessorCount;
@@ -34,7 +45,7 @@ public class Worker : BackgroundService
         {
             try
             {
-                var subTaskIds = await dispatcherWorkerService.GetNotStartedSubTask(countOfMessages);
+                var subTaskIds = await _dispatcherWorkerService.GetNotStartedSubTask(countOfMessages);
 
                 if (!subTaskIds.Any())
                 {
@@ -42,28 +53,28 @@ public class Worker : BackgroundService
                     continue;
                 }
             
-                var subTasks = await dispatcherWorkerService.GetSubTask(subTaskIds, stoppingToken);
+                _subTasks = await _dispatcherWorkerService.GetSubTask(subTaskIds, stoppingToken);
             
-                await dispatcherWorkerService.SetInProgressSubTask(subTasks, stoppingToken);
+                await _dispatcherWorkerService.SetInProgressSubTask(_subTasks, stoppingToken);
             
                 var parallelOptions = new ParallelOptions
                 {
                     MaxDegreeOfParallelism = maxDegreeOfParallelism
                 };
             
-                await Parallel.ForEachAsync(subTasks, parallelOptions, async (subTask, cancellationToken) =>
+                await Parallel.ForEachAsync(_subTasks, parallelOptions, async (subTask, cancellationToken) =>
                 {
                     try
                     {
-                        await dispatcherWorkerService.ProcessSubTask(subTask, cancellationToken);
+                        await _dispatcherWorkerService.ProcessSubTask(subTask, cancellationToken);
                         subTask.Status = SubTaskStatusEnum.Completed;
-                        await dispatcherWorkerService.UpdateSubTask(subTask, cancellationToken);
+                        await _dispatcherWorkerService.UpdateSubTask(subTask);
                     }
                     catch (Exception e)
                     {
                         _logger.LogError(e.Message);
                         subTask.Status = SubTaskStatusEnum.Error;
-                        await dispatcherWorkerService.UpdateSubTask(subTask, cancellationToken);
+                        await _dispatcherWorkerService.UpdateSubTask(subTask);
                     }
                 });
             }
@@ -74,5 +85,22 @@ public class Worker : BackgroundService
             
             await Task.Delay(TimeSpan.FromSeconds(_options.SleepTimeInSecond), stoppingToken);
         }
+    }
+
+    public override async Task StopAsync(CancellationToken cancellationToken)
+    {
+        var inprogressSubTask = _subTasks
+            .Where(x => x.Status == SubTaskStatusEnum.InProgress)
+            .ToList();
+        
+        foreach (var subTask in inprogressSubTask)
+        {
+            subTask.Status = SubTaskStatusEnum.NotStarted;
+            await _dispatcherWorkerService.RestartSubTask(subTask.Id);
+            await _dispatcherWorkerService.UpdateSubTask(subTask);
+        }
+
+        await _scope.DisposeAsync();
+        await base.StopAsync(cancellationToken);
     }
 }
